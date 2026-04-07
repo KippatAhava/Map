@@ -12,269 +12,54 @@
   />
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
-      color: #1f2937;
-    }
-
-    .page {
-      max-width: 1200px;
-      margin: 28px auto;
-      padding: 0 18px;
-    }
-
-    .header {
-      margin-bottom: 18px;
-    }
-
-    .header h1 {
-      margin: 0 0 8px;
-      font-size: 2rem;
-      font-weight: 700;
-      color: #0f172a;
-      letter-spacing: -0.02em;
-    }
-
-    .header p {
-      margin: 0;
-      color: #475569;
-      line-height: 1.5;
-      font-size: 0.98rem;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 22px;
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
-    }
-
-    .sidebar {
-      padding: 18px;
-    }
-
-    .section-title {
-      margin: 0 0 10px;
-      font-size: 1rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
-
-    .helper {
-      font-size: 0.9rem;
-      color: #64748b;
-      margin-bottom: 12px;
-      line-height: 1.45;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 230px;
-      border: 1px solid #dbe3ef;
-      border-radius: 16px;
-      padding: 14px;
-      resize: vertical;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 14px;
-      line-height: 1.5;
-      background: #fbfdff;
-      color: #0f172a;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    textarea:focus,
-    input:focus {
-      border-color: #7c9cff;
-      box-shadow: 0 0 0 4px rgba(124, 156, 255, 0.15);
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .field label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      color: #334155;
-    }
-
-    .field input {
-      width: 100%;
-      border: 1px solid #dbe3ef;
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 14px;
-      background: #fbfdff;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 16px;
-      flex-wrap: wrap;
-    }
-
-    button {
-      border: none;
-      border-radius: 14px;
-      padding: 11px 16px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-    .primary {
-      background: linear-gradient(135deg, #3b82f6, #6366f1);
-      color: white;
-      box-shadow: 0 10px 24px rgba(59, 130, 246, 0.25);
-    }
-
-    .secondary {
-      background: #eef2ff;
-      color: #3730a3;
-    }
-
-    .status {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      color: #475569;
-      font-size: 0.92rem;
-      line-height: 1.45;
-      min-height: 48px;
-      white-space: pre-line;
-    }
-
-    .map-card {
-      padding: 12px;
-    }
-
-    #map {
-      width: 100%;
-      height: 720px;
-      border-radius: 18px;
-      overflow: hidden;
-    }
-
-    .legend {
-      background: rgba(255,255,255,0.95);
-      padding: 12px 14px;
-      border-radius: 14px;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
-      border: 1px solid rgba(148,163,184,0.2);
-      line-height: 1.35;
-    }
-
-    .legend-title {
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #0f172a;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: #334155;
-      margin: 6px 0;
-    }
-
-    .legend-color {
-      width: 14px;
-      height: 14px;
-      border-radius: 999px;
-      border: 2px solid #000;
-      opacity: 0.65;
-      flex: 0 0 14px;
-    }
-
-    .bubble-popup {
-      font-family: Inter, system-ui, sans-serif;
-      line-height: 1.45;
-      font-size: 14px;
-    }
-
-    .bubble-popup .title {
-      font-weight: 700;
-      color: #0f172a;
-      margin-bottom: 4px;
-    }
-
-    .leaflet-popup-content-wrapper {
-      border-radius: 14px;
-    }
-
-    @media (max-width: 950px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      #map {
-        height: 560px;
-      }
-    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%); color: #1f2937; }
+    .page { max-width: 1200px; margin: 28px auto; padding: 0 18px; }
+    .header { margin-bottom: 18px; }
+    .header h1 { margin: 0 0 8px; font-size: 2rem; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
+    .header p { margin: 0; color: #475569; line-height: 1.5; font-size: 0.98rem; }
+    .layout { display: grid; grid-template-columns: 360px 1fr; gap: 18px; align-items: start; }
+    .card { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(10px); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 22px; box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08); }
+    .sidebar { padding: 18px; }
+    .section-title { margin: 0 0 10px; font-size: 1rem; font-weight: 700; color: #0f172a; }
+    .helper { font-size: 0.9rem; color: #64748b; margin-bottom: 12px; line-height: 1.45; }
+    textarea { width: 100%; min-height: 230px; border: 1px solid #dbe3ef; border-radius: 16px; padding: 14px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 14px; line-height: 1.5; background: #fbfdff; color: #0f172a; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    textarea:focus, input:focus { border-color: #7c9cff; box-shadow: 0 0 0 4px rgba(124, 156, 255, 0.15); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .field label { display: block; margin-bottom: 6px; font-size: 0.84rem; font-weight: 600; color: #334155; }
+    .field input { width: 100%; border: 1px solid #dbe3ef; border-radius: 12px; padding: 10px 12px; font-size: 14px; background: #fbfdff; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .buttons { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    button { border: none; border-radius: 14px; padding: 11px 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s; }
+    button:hover { transform: translateY(-1px); }
+    .primary { background: linear-gradient(135deg, #3b82f6, #6366f1); color: white; box-shadow: 0 10px 24px rgba(59, 130, 246, 0.25); }
+    .secondary { background: #eef2ff; color: #3730a3; }
+    .status { margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-size: 0.92rem; line-height: 1.45; min-height: 48px; white-space: pre-line; }
+    .map-card { padding: 12px; }
+    #map { width: 100%; height: 720px; border-radius: 18px; overflow: hidden; }
+    .legend { background: rgba(255,255,255,0.95); padding: 12px 14px; border-radius: 14px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15); border: 1px solid rgba(148,163,184,0.2); line-height: 1.35; }
+    .legend-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #0f172a; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #334155; margin: 6px 0; }
+    .legend-color { width: 14px; height: 14px; border-radius: 999px; border: 2px solid #000; opacity: 0.65; flex: 0 0 14px; }
+    .bubble-popup { font-family: Inter, system-ui, sans-serif; line-height: 1.45; font-size: 14px; }
+    .bubble-popup .title { font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .leaflet-popup-content-wrapper { border-radius: 14px; }
+    @media (max-width: 950px) { .layout { grid-template-columns: 1fr; } #map { height: 560px; } }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="header">
       <h1>Bubble Map</h1>
-      <p>
-        Enter one location per line. Duplicate locations are
-        <strong>counted automatically</strong> — the more entries, the bigger the bubble.
-      </p>
+      <p>Enter one location per line. Duplicate locations are <strong>counted automatically</strong> — the more entries, the bigger the bubble.</p>
     </div>
 
     <div class="layout">
       <div class="card sidebar">
         <div class="section-title">Input Data</div>
         <div class="helper">
-          Example:
-          <br />
-          New York
-          <br />
-          New York
-          <br />
-          Chicago
-          <br />
-          Chicago
-          <br />
-          Chicago
-          <br />
-          (New York → 2, Chicago → 3)
+          Example:<br />
+          New York<br />New York<br />Chicago<br />Chicago<br />Chicago
         </div>
-
         <textarea id="dataInput">New York
 New York
 New York
@@ -320,21 +105,10 @@ Atlanta</textarea>
     </div>
   </div>
 
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    crossorigin=""
-  ></script>
-
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script>
-    const map = L.map("map", {
-      zoomControl: true
-    }).setView([20, 0], 2);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 18,
-      attribution: "&copy; OpenStreetMap contributors"
-    }).addTo(map);
-
+    const map = L.map("map", { zoomControl: true }).setView([20, 0], 2);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
     const bubbleLayer = L.layerGroup().addTo(map);
 
     const statusEl = document.getElementById("status");
@@ -342,230 +116,108 @@ Atlanta</textarea>
     const minRadiusInput = document.getElementById("minRadius");
     const maxRadiusInput = document.getElementById("maxRadius");
 
-    const colors = [
-      "#ef4444",
-      "#f59e0b",
-      "#10b981",
-      "#3b82f6",
-      "#8b5cf6",
-      "#ec4899",
-      "#14b8a6",
-      "#f97316"
-    ];
-
+    const colors = ["#ef4444","#f59e0b","#10b981","#3b82f6","#8b5cf6","#ec4899","#14b8a6","#f97316"];
     let legendControl = null;
+    const STORAGE_KEY = "bubbleMapData";
 
-    /* ──────────────────────────────────────────────
-       NEW: parse input as one location per line,
-       then count duplicates automatically
-    ────────────────────────────────────────────── */
+    // ─── LocalStorage ───
+    function loadSavedData() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const obj = JSON.parse(saved);
+          dataInput.value = obj.dataInput || "";
+          minRadiusInput.value = obj.minRadius || 10;
+          maxRadiusInput.value = obj.maxRadius || 38;
+        } catch {}
+      }
+    }
+    function saveData() {
+      const obj = { dataInput: dataInput.value, minRadius: minRadiusInput.value, maxRadius: maxRadiusInput.value };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+    }
+    function clearSavedData() { localStorage.removeItem(STORAGE_KEY); }
+
+    // ─── Map functions ───
     function parseInput(text) {
-      const lines = text
-        .split("\n")
-        .map(line => line.trim())
-        .filter(Boolean);
-
-      // Count occurrences of each location (case-insensitive grouping)
-      const countMap = {};
-      const displayName = {}; // preserve original casing of first occurrence
-
+      const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+      const countMap = {}, displayName = {};
       for (const line of lines) {
         const key = line.toLowerCase();
-        if (!countMap[key]) {
-          countMap[key] = 0;
-          displayName[key] = line; // keep the first casing we see
-        }
+        if (!countMap[key]) { countMap[key]=0; displayName[key]=line; }
         countMap[key]++;
       }
-
-      // Convert to array of { location, amount }
-      const rows = [];
-      for (const key of Object.keys(countMap)) {
-        rows.push({
-          location: displayName[key],
-          amount: countMap[key]
-        });
-      }
-
-      return rows;
+      return Object.keys(countMap).map(key => ({ location: displayName[key], amount: countMap[key] }));
     }
 
     async function geocodeLocation(location) {
-      const url =
-        "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=" +
-        encodeURIComponent(location);
-
-      const response = await fetch(url, {
-        headers: {
-          Accept: "application/json"
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to geocode ${location}`);
-      }
-
-      const data = await response.json();
-      if (!data.length) return null;
-
-      return {
-        lat: parseFloat(data[0].lat),
-        lon: parseFloat(data[0].lon),
-        displayName: data[0].display_name
-      };
+      const url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=" + encodeURIComponent(location);
+      const res = await fetch(url, { headers:{Accept:"application/json"} });
+      if(!res.ok) throw new Error(`Failed to geocode ${location}`);
+      const data = await res.json();
+      if(!data.length) return null;
+      return { lat:parseFloat(data[0].lat), lon:parseFloat(data[0].lon), displayName:data[0].display_name };
     }
 
-    function scaleRadius(value, minVal, maxVal, minRadius, maxRadius) {
-      if (minVal === maxVal) return (minRadius + maxRadius) / 2;
-      const t = (value - minVal) / (maxVal - minVal);
-      return minRadius + t * (maxRadius - minRadius);
+    function scaleRadius(value,minVal,maxVal,minRadius,maxRadius) {
+      if(minVal===maxVal) return (minRadius+maxRadius)/2;
+      const t = (value-minVal)/(maxVal-minVal);
+      return minRadius + t*(maxRadius-minRadius);
     }
 
-    function getColor(index) {
-      return colors[index % colors.length];
-    }
+    function getColor(i){ return colors[i%colors.length]; }
+    function clearLegend(){ if(legendControl){ map.removeControl(legendControl); legendControl=null; } }
 
-    function clearLegend() {
-      if (legendControl) {
-        map.removeControl(legendControl);
-        legendControl = null;
-      }
-    }
-
-    function addLegend(rows) {
+    function addLegend(rows){
       clearLegend();
-
-      // Sort by count descending for the legend
-      const sorted = [...rows].sort((a, b) => b.amount - a.amount);
-      const topRows = sorted.slice(0, Math.min(sorted.length, 6));
-
+      const sorted = [...rows].sort((a,b)=>b.amount-a.amount);
+      const topRows = sorted.slice(0, Math.min(sorted.length,6));
       legendControl = L.control({ position: "bottomright" });
-
-      legendControl.onAdd = function () {
-        const div = L.DomUtil.create("div", "legend");
+      legendControl.onAdd = function(){
+        const div = L.DomUtil.create("div","legend");
         let html = `<div class="legend-title">Locations (by count)</div>`;
-
-        topRows.forEach((row) => {
-          // find original index for color
-          const origIndex = rows.findIndex(r => r.location === row.location);
-          html += `
-            <div class="legend-item">
-              <span class="legend-color" style="background:${getColor(origIndex)};"></span>
-              <span>${row.location} — ${row.amount}</span>
-            </div>
-          `;
-        });
-
-        if (rows.length > 6) {
-          html += `<div class="legend-item" style="margin-top:8px; color:#64748b;">+ ${rows.length - 6} more</div>`;
-        }
-
-        div.innerHTML = html;
-        return div;
+        topRows.forEach((row,i)=>{ const idx=rows.findIndex(r=>r.location===row.location); html+=`<div class="legend-item"><span class="legend-color" style="background:${getColor(idx)};"></span><span>${row.location} — ${row.amount}</span></div>`; });
+        if(rows.length>6){ html+=`<div class="legend-item" style="margin-top:8px; color:#64748b;">+ ${rows.length-6} more</div>`; }
+        div.innerHTML=html; return div;
       };
-
       legendControl.addTo(map);
     }
 
-    async function plotMap() {
-      bubbleLayer.clearLayers();
-      clearLegend();
-
-      const rows = parseInput(dataInput.value);
-
-      if (!rows.length) {
-        statusEl.textContent = "No valid locations found. Enter one location per line.";
-        return;
+    async function plotMap(){
+      bubbleLayer.clearLayers(); clearLegend(); saveData();
+      const rows=parseInput(dataInput.value);
+      if(!rows.length){ statusEl.textContent="No valid locations found."; return; }
+      const minR=Number(minRadiusInput.value)||10, maxR=Number(maxRadiusInput.value)||38;
+      const amounts=rows.map(r=>r.amount), minAmt=Math.min(...amounts), maxAmt=Math.max(...amounts);
+      const bounds=[], failures=[], successfulRows=[];
+      for(let i=0;i<rows.length;i++){
+        const row=rows[i];
+        statusEl.textContent=`Geocoding ${i+1} of ${rows.length}: ${row.location} (${row.amount} response${row.amount!==1?"s":""})`;
+        try{
+          const result=await geocodeLocation(row.location);
+          if(!result){ failures.push(row.location); continue; }
+          const radius=scaleRadius(row.amount,minAmt,maxAmt,minR,maxR), fill=getColor(i);
+          const circle=L.circleMarker([result.lat,result.lon],{radius, fillColor:fill, fillOpacity:0.42, color:"#000", weight:2, opacity:0.9});
+          circle.bindPopup(`<div class="bubble-popup"><div class="title">${row.location}</div><div><strong>Responses:</strong> ${row.amount}</div><div><strong>Matched:</strong> ${result.displayName}</div></div>`);
+          circle.on("mouseover",()=>circle.setStyle({weight:3,fillOpacity:0.58}));
+          circle.on("mouseout",()=>circle.setStyle({weight:2,fillOpacity:0.42}));
+          circle.addTo(bubbleLayer); bounds.push([result.lat,result.lon]); successfulRows.push(row);
+        }catch{ failures.push(row.location); }
       }
-
-      const minRadius = Number(minRadiusInput.value) || 10;
-      const maxRadius = Number(maxRadiusInput.value) || 38;
-
-      const amounts = rows.map(r => r.amount);
-      const minAmt = Math.min(...amounts);
-      const maxAmt = Math.max(...amounts);
-
-      const bounds = [];
-      const failures = [];
-      const successfulRows = [];
-
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        statusEl.textContent = `Geocoding ${i + 1} of ${rows.length}: ${row.location} (${row.amount} response${row.amount !== 1 ? "s" : ""})`;
-
-        try {
-          const result = await geocodeLocation(row.location);
-
-          if (!result) {
-            failures.push(row.location);
-            continue;
-          }
-
-          const radius = scaleRadius(row.amount, minAmt, maxAmt, minRadius, maxRadius);
-          const fill = getColor(i);
-
-          const circle = L.circleMarker([result.lat, result.lon], {
-            radius: radius,
-            fillColor: fill,
-            fillOpacity: 0.42,
-            color: "#000000",
-            weight: 2,
-            opacity: 0.9
-          });
-
-          circle.bindPopup(`
-            <div class="bubble-popup">
-              <div class="title">${row.location}</div>
-              <div><strong>Responses:</strong> ${row.amount}</div>
-              <div><strong>Matched:</strong> ${result.displayName}</div>
-            </div>
-          `);
-
-          circle.on("mouseover", function () {
-            this.setStyle({
-              weight: 3,
-              fillOpacity: 0.58
-            });
-          });
-
-          circle.on("mouseout", function () {
-            this.setStyle({
-              weight: 2,
-              fillOpacity: 0.42
-            });
-          });
-
-          circle.addTo(bubbleLayer);
-          bounds.push([result.lat, result.lon]);
-          successfulRows.push(row);
-        } catch (error) {
-          failures.push(row.location);
-        }
-      }
-
-      if (bounds.length) {
-        map.fitBounds(bounds, { padding: [40, 40] });
-      }
-
-      if (successfulRows.length) {
-        addLegend(successfulRows);
-      }
-
-      let msg = `Done. ${successfulRows.length} unique location(s) plotted from ${amounts.reduce((a, b) => a + b, 0)} total entries.`;
-      if (failures.length) {
-        msg += `\nCould not geocode: ${failures.join(", ")}`;
-      }
-
-      statusEl.textContent = msg;
+      if(bounds.length) map.fitBounds(bounds,{padding:[40,40]});
+      if(successfulRows.length) addLegend(successfulRows);
+      let msg=`Done. ${successfulRows.length} unique location(s) plotted from ${amounts.reduce((a,b)=>a+b,0)} total entries.`;
+      if(failures.length) msg+=`\nCould not geocode: ${failures.join(", ")}`;
+      statusEl.textContent=msg;
     }
 
     document.getElementById("plotBtn").addEventListener("click", plotMap);
-
-    document.getElementById("clearBtn").addEventListener("click", () => {
-      bubbleLayer.clearLayers();
-      clearLegend();
-      statusEl.textContent = "Cleared.";
+    document.getElementById("clearBtn").addEventListener("click",()=>{
+      bubbleLayer.clearLayers(); clearLegend(); statusEl.textContent="Cleared."; clearSavedData();
     });
+
+    // Load saved data on start
+    loadSavedData();
   </script>
 </body>
 </html>
