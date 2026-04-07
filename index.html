@@ -12,6 +12,7 @@
   />
 
   <style>
+    /* === your previous styles === */
     * { box-sizing: border-box; }
     body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%); color: #1f2937; }
     .page { max-width: 1200px; margin: 28px auto; padding: 0 18px; }
@@ -60,34 +61,16 @@
           Example:<br />
           New York<br />New York<br />Chicago<br />Chicago<br />Chicago
         </div>
-        <textarea id="dataInput">New York
-New York
-New York
-Los Angeles
-Los Angeles
-Chicago
-Chicago
-Chicago
-Chicago
-Houston
-Miami
-Miami
-Miami
-Seattle
-Denver
-Denver
-Atlanta
-Atlanta
-Atlanta</textarea>
+        <textarea id="dataInput"></textarea>
 
         <div class="row">
           <div class="field">
             <label for="minRadius">Min bubble radius</label>
-            <input id="minRadius" type="number" value="10" min="1" />
+            <input id="minRadius" type="number" min="1" />
           </div>
           <div class="field">
             <label for="maxRadius">Max bubble radius</label>
-            <input id="maxRadius" type="number" value="38" min="1" />
+            <input id="maxRadius" type="number" min="1" />
           </div>
         </div>
 
@@ -107,61 +90,88 @@ Atlanta</textarea>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script>
-    const map = L.map("map", { zoomControl: true }).setView([20, 0], 2);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+    const map = L.map("map").setView([20,0],2);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:18, attribution:"&copy; OpenStreetMap contributors" }).addTo(map);
     const bubbleLayer = L.layerGroup().addTo(map);
 
-    const statusEl = document.getElementById("status");
     const dataInput = document.getElementById("dataInput");
     const minRadiusInput = document.getElementById("minRadius");
     const maxRadiusInput = document.getElementById("maxRadius");
+    const statusEl = document.getElementById("status");
 
     const colors = ["#ef4444","#f59e0b","#10b981","#3b82f6","#8b5cf6","#ec4899","#14b8a6","#f97316"];
     let legendControl = null;
     const STORAGE_KEY = "bubbleMapData";
 
-    // ─── LocalStorage ───
-    function loadSavedData() {
+    // Load saved data
+    function loadSavedData(){
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
+      if(saved){
+        try{
           const obj = JSON.parse(saved);
           dataInput.value = obj.dataInput || "";
           minRadiusInput.value = obj.minRadius || 10;
           maxRadiusInput.value = obj.maxRadius || 38;
-        } catch {}
+        }catch{}
+      } else {
+        // default example
+        dataInput.value = `New York
+New York
+New York
+Los Angeles
+Los Angeles
+Chicago
+Chicago
+Chicago
+Chicago
+Houston
+Miami
+Miami
+Miami
+Seattle
+Denver
+Denver
+Atlanta
+Atlanta
+Atlanta`;
+        minRadiusInput.value = 10;
+        maxRadiusInput.value = 38;
       }
     }
-    function saveData() {
-      const obj = { dataInput: dataInput.value, minRadius: minRadiusInput.value, maxRadius: maxRadiusInput.value };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
-    }
-    function clearSavedData() { localStorage.removeItem(STORAGE_KEY); }
 
-    // ─── Map functions ───
-    function parseInput(text) {
-      const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
-      const countMap = {}, displayName = {};
-      for (const line of lines) {
+    function saveData(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        dataInput: dataInput.value,
+        minRadius: minRadiusInput.value,
+        maxRadius: maxRadiusInput.value
+      }));
+    }
+
+    function clearSavedData(){ localStorage.removeItem(STORAGE_KEY); }
+
+    function parseInput(text){
+      const lines = text.split("\n").map(l=>l.trim()).filter(Boolean);
+      const countMap={}, displayName={};
+      for(const line of lines){
         const key = line.toLowerCase();
-        if (!countMap[key]) { countMap[key]=0; displayName[key]=line; }
+        if(!countMap[key]){ countMap[key]=0; displayName[key]=line; }
         countMap[key]++;
       }
-      return Object.keys(countMap).map(key => ({ location: displayName[key], amount: countMap[key] }));
+      return Object.keys(countMap).map(key=>({location: displayName[key], amount: countMap[key]}));
     }
 
-    async function geocodeLocation(location) {
+    async function geocodeLocation(location){
       const url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=" + encodeURIComponent(location);
-      const res = await fetch(url, { headers:{Accept:"application/json"} });
+      const res = await fetch(url,{ headers:{Accept:"application/json"} });
       if(!res.ok) throw new Error(`Failed to geocode ${location}`);
       const data = await res.json();
       if(!data.length) return null;
       return { lat:parseFloat(data[0].lat), lon:parseFloat(data[0].lon), displayName:data[0].display_name };
     }
 
-    function scaleRadius(value,minVal,maxVal,minRadius,maxRadius) {
+    function scaleRadius(value,minVal,maxVal,minRadius,maxRadius){
       if(minVal===maxVal) return (minRadius+maxRadius)/2;
-      const t = (value-minVal)/(maxVal-minVal);
+      const t=(value-minVal)/(maxVal-minVal);
       return minRadius + t*(maxRadius-minRadius);
     }
 
@@ -171,13 +181,13 @@ Atlanta</textarea>
     function addLegend(rows){
       clearLegend();
       const sorted = [...rows].sort((a,b)=>b.amount-a.amount);
-      const topRows = sorted.slice(0, Math.min(sorted.length,6));
-      legendControl = L.control({ position: "bottomright" });
-      legendControl.onAdd = function(){
+      const topRows = sorted.slice(0,6);
+      legendControl = L.control({position:"bottomright"});
+      legendControl.onAdd=function(){
         const div = L.DomUtil.create("div","legend");
-        let html = `<div class="legend-title">Locations (by count)</div>`;
-        topRows.forEach((row,i)=>{ const idx=rows.findIndex(r=>r.location===row.location); html+=`<div class="legend-item"><span class="legend-color" style="background:${getColor(idx)};"></span><span>${row.location} — ${row.amount}</span></div>`; });
-        if(rows.length>6){ html+=`<div class="legend-item" style="margin-top:8px; color:#64748b;">+ ${rows.length-6} more</div>`; }
+        let html=`<div class="legend-title">Locations (by count)</div>`;
+        topRows.forEach((row)=>{ const idx = rows.findIndex(r=>r.location===row.location); html+=`<div class="legend-item"><span class="legend-color" style="background:${getColor(idx)};"></span><span>${row.location} — ${row.amount}</span></div>`; });
+        if(rows.length>6) html+=`<div class="legend-item" style="margin-top:8px;color:#64748b;">+ ${rows.length-6} more</div>`;
         div.innerHTML=html; return div;
       };
       legendControl.addTo(map);
@@ -185,19 +195,26 @@ Atlanta</textarea>
 
     async function plotMap(){
       bubbleLayer.clearLayers(); clearLegend(); saveData();
-      const rows=parseInput(dataInput.value);
+      const rows = parseInput(dataInput.value);
       if(!rows.length){ statusEl.textContent="No valid locations found."; return; }
-      const minR=Number(minRadiusInput.value)||10, maxR=Number(maxRadiusInput.value)||38;
-      const amounts=rows.map(r=>r.amount), minAmt=Math.min(...amounts), maxAmt=Math.max(...amounts);
-      const bounds=[], failures=[], successfulRows=[];
+      const minR = Number(minRadiusInput.value)||10;
+      const maxR = Number(maxRadiusInput.value)||38;
+      const amounts = rows.map(r=>r.amount);
+      const minAmt = Math.min(...amounts);
+      const maxAmt = Math.max(...amounts);
+      const bounds = [];
+      const failures = [];
+      const successfulRows = [];
+
       for(let i=0;i<rows.length;i++){
-        const row=rows[i];
-        statusEl.textContent=`Geocoding ${i+1} of ${rows.length}: ${row.location} (${row.amount} response${row.amount!==1?"s":""})`;
+        const row = rows[i];
+        statusEl.textContent = `Geocoding ${i+1} of ${rows.length}: ${row.location} (${row.amount} response${row.amount!==1?"s":""})`;
         try{
-          const result=await geocodeLocation(row.location);
+          const result = await geocodeLocation(row.location);
           if(!result){ failures.push(row.location); continue; }
-          const radius=scaleRadius(row.amount,minAmt,maxAmt,minR,maxR), fill=getColor(i);
-          const circle=L.circleMarker([result.lat,result.lon],{radius, fillColor:fill, fillOpacity:0.42, color:"#000", weight:2, opacity:0.9});
+          const radius = scaleRadius(row.amount,minAmt,maxAmt,minR,maxR);
+          const fill = getColor(i);
+          const circle = L.circleMarker([result.lat,result.lon], { radius, fillColor: fill, fillOpacity:0.42, color:"#000", weight:2, opacity:0.9 });
           circle.bindPopup(`<div class="bubble-popup"><div class="title">${row.location}</div><div><strong>Responses:</strong> ${row.amount}</div><div><strong>Matched:</strong> ${result.displayName}</div></div>`);
           circle.on("mouseover",()=>circle.setStyle({weight:3,fillOpacity:0.58}));
           circle.on("mouseout",()=>circle.setStyle({weight:2,fillOpacity:0.42}));
@@ -206,17 +223,16 @@ Atlanta</textarea>
       }
       if(bounds.length) map.fitBounds(bounds,{padding:[40,40]});
       if(successfulRows.length) addLegend(successfulRows);
-      let msg=`Done. ${successfulRows.length} unique location(s) plotted from ${amounts.reduce((a,b)=>a+b,0)} total entries.`;
-      if(failures.length) msg+=`\nCould not geocode: ${failures.join(", ")}`;
-      statusEl.textContent=msg;
+      let msg = `Done. ${successfulRows.length} unique location(s) plotted from ${amounts.reduce((a,b)=>a+b,0)} total entries.`;
+      if(failures.length) msg += `\nCould not geocode: ${failures.join(", ")}`;
+      statusEl.textContent = msg;
     }
 
     document.getElementById("plotBtn").addEventListener("click", plotMap);
-    document.getElementById("clearBtn").addEventListener("click",()=>{
+    document.getElementById("clearBtn").addEventListener("click", ()=>{
       bubbleLayer.clearLayers(); clearLegend(); statusEl.textContent="Cleared."; clearSavedData();
     });
 
-    // Load saved data on start
     loadSavedData();
   </script>
 </body>
